@@ -4,7 +4,6 @@ import ActionCreators from '../actionCreators';
 import { baseUrl } from '../../service/API';
 
 export function* getBreeds() {
-  const url = `${baseUrl}/breeds/list/all`;
-  const breeds = yield axios.get(url);
+  const breeds = yield axios.get(`${baseUrl}/${breedSelected}/images/random`);
   yield put(ActionCreators.getBreedsSuccess(breeds.data));
 }

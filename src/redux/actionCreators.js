@@ -10,6 +10,10 @@ export const {
 
   saveBreedSelectedSuccess: ['breedSelected'],
 
+  getImageBreedRequest: null,
+  getImageBreedSuccess: ['imageBreed'],
+  getImageBreedFailure: null,
+
   getModelsRequest: null,
   getModelsSuccess: ['models'],
   getModelsFailure: null,
