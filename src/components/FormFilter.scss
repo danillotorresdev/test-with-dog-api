@@ -48,7 +48,6 @@
       transform: rotate(45deg);
     }
   }
-
   &--onde {
     position: relative;
     width: 70%;
@@ -115,11 +114,62 @@
   &--advancedSearchLink {
     color: #e93f43;
     cursor: pointer;
-    &:hover{
-        color: #e93f43;
+    &:hover {
+      color: #e93f43;
     }
   }
-  &--cleanFiltersLink{
-      color: $primary-font-color;
+  &--cleanFiltersLink {
+    color: $primary-font-color;
+  }
+  &--imageWithText {
+    position: relative;
+    text-align: center;
+  }
+  &--dogName {
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+    font-size: 45px;
+    color: #fff;
+    width: 100%;
+    margin: 0 auto;
+  }
+  &--blue {
+    color: blue;
+  }
+  &--red {
+    color: red;
+  }
+  &--white {
+    color: white;
+  }
+  &--yellow {
+    color: yellow;
+  }
+  &--purple {
+    color: purple;
+  }
+  &--font {
+    &__nunito {
+      font-family: $fontNunito;
+    }
+    &__roboto {
+      font-family: $fontRoboto;
+    }
+    &__lexend {
+      font-family: $fontLexend;
+    }
+    &__hind {
+      font-family: $fontHind;
+    }
+    &__montserrat {
+      font-family: $fontMontserrat;
+    }
+  }
+
+  &.montserrat {
+    p {
+      font-family: $fontMontserrat;
+    }
   }
 }

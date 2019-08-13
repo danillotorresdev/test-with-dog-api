@@ -18,7 +18,7 @@ export const getImageBreedsSuccess = (state = INITIAL_STATE, action) => {
   return {
     ...state,
     isLoading: false,
-    imageBreed: action.breeds,
+    imageBreed: action.imageBreed,
   };
 };
 
