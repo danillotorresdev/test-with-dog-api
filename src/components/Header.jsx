@@ -4,10 +4,7 @@ const Header = () => (
   <header>
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
-        <a className="navbar-brand" href="/"><img src="/webmotors.svg" alt="logo" /></a>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#conteudoNavbarSuportado" aria-controls="conteudoNavbarSuportado" aria-expanded="false" aria-label="Alterna navegação">
-          <span className="navbar-toggler-icon" />
-        </button>
+        <a className="navbar-brand" href="/"><img className="img-fluid logo" src="/dog-api-logo.svg" alt="logo" /></a>
       </div>
     </nav>
   </header>

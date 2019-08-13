@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { IoIosPin, IoIosArrowForward } from 'react-icons/io';
 import { connect } from 'react-redux';
+import Select from './Select'
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 import ActionCreators from '../redux/actionCreators';
-import imageBreed from '../redux/reducers/imageBreed';
 
 class FormFilter extends Component {
   constructor(props) {
@@ -16,23 +16,23 @@ class FormFilter extends Component {
       defaultFontDisabled: null,
       colors: [
         {
-          color: 'formFilter--blue',
+          color: 'formDog--color__blue',
           label: 'Azul'
         },
         {
-          color: 'formFilter--red',
+          color: 'formDog--color__red',
           label: 'Vermelho'
         },
         {
-          color: 'formFilter--white',
+          color: 'formDog--color__white',
           label: 'Branco'
         },
         {
-          color: 'formFilter--yellow',
+          color: 'formDog--color__yellow',
           label: 'Amarelo'
         },
         {
-          color: 'formFilter--purple',
+          color: 'formDog--color__purple',
           label: 'Roxo'
         },
       ],
@@ -62,6 +62,8 @@ class FormFilter extends Component {
       nameSelected: '',
       colorSelected: '',
       breedImg: '',
+      dateAndHour: '',
+      notification: false,
     };
 
     this.handleSelectBreed = this.handleSelectBreed.bind(this);
@@ -72,7 +74,7 @@ class FormFilter extends Component {
   }
 
   componentDidMount() {
-    const { loadBreeds, loadModels, loadImageBreed } = this.props;
+    const { loadBreeds } = this.props;
     loadBreeds();
 
     const font = localStorage.getItem('fontSelected');
@@ -80,6 +82,7 @@ class FormFilter extends Component {
     const nameSelected = localStorage.getItem('nameSelected');
     const breedImg = localStorage.getItem('breedImg');
     const breedSelected = localStorage.getItem('breedSelected');
+    const dateAndHour = localStorage.getItem('dateAndHour');
 
     if (font) {
       this.setState({ fontSelected: font });
@@ -97,6 +100,12 @@ class FormFilter extends Component {
     if (breedSelected) {
       this.setState({
         breedSelected
+      })
+    }
+
+    if (dateAndHour) {
+      this.setState({
+        dateAndHour
       })
     }
   }
@@ -157,22 +166,45 @@ class FormFilter extends Component {
   }
 
   saveDogInfo() {
-    const { colorSelected, fontSelected, nameSelected, breedImg, breedSelected } = this.state;
-    const { breeds, imageBreed } = this.props;
+    const date = new Date().getDate();
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
+    const hours = new Date().getHours();
+    const min = new Date().getMinutes();
+    const sec = new Date().getSeconds();
+
+    const dateAndHourConc = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
+
+    const { colorSelected, fontSelected, nameSelected, breedSelected } = this.state;
+    const { imageBreed } = this.props;
     localStorage.setItem('fontSelected', fontSelected);
     localStorage.setItem('colorSelected', colorSelected);
     localStorage.setItem('nameSelected', nameSelected);
     localStorage.setItem('breedSelected', breedSelected);
     localStorage.setItem('breedImg', imageBreed.imageBreed.message);
+    localStorage.setItem('dateAndHour', dateAndHourConc);
+
+    this.setState({
+      dateAndHour: dateAndHourConc,
+    });
+    NotificationManager.success('Salvo com sucesso');
   }
 
   render() {
     const { breeds, imageBreed } = this.props;
-    const { colors, breedSelected, fonts, nameSelected, defaultColorDisabled, defaultBreedDisabled, defaultFontDisabled, breedImg } = this.state
+    const {
+      colors,
+      breedSelected,
+      fonts,
+      nameSelected,
+      defaultColorDisabled,
+      defaultBreedDisabled,
+      defaultFontDisabled,
+      breedImg,
+    } = this.state
 
     const breedsData = breeds.data.message;
     const newBreeds = this.json2array(breedsData);
-
 
     let dogImage;
     if (breedImg) {
@@ -180,79 +212,76 @@ class FormFilter extends Component {
     } else {
       dogImage = imageBreed.imageBreed.message
     }
-    console.log(imageBreed.imageBreed.message)
     if (imageBreed.imageBreed.message !== undefined) {
       dogImage = imageBreed.imageBreed.message;
     }
 
-
     return (
       <div className="container pt-4">
         <div className="row">
-          <form className="formFilter col-md-12 row">
-            <div className="col-md-12">
-
-            </div>
+          <form className="formDog col-md-12 row">
             <div className="col-md-6">
-              <div className="formFilter--imageWithText form-group d-flex flex-wrap flex-column ">
-                <img class="img-fluid" src={dogImage} alt="" />
-                <span className={`formFilter--dogName ${this.state.colorSelected} formFilter--font__${this.state.fontSelected}`}>{nameSelected}</span>
+              <div className="formDog--imageWithText form-group d-flex flex-wrap flex-column ">
+                <img className="img-fluid" src={dogImage} alt="" />
+                <span className={`formDog--dogName ${this.state.colorSelected} formDog--font__${this.state.fontSelected}`}>{nameSelected}</span>
               </div>
             </div>
 
             <div className="col-md-6">
               <div className="row form-group">
                 <div className="col-md-6">
-                  <select value={breedSelected ? breedSelected : 'Selecione uma raça'} onChange={this.handleSelectBreed} className="formFilter--select formFilter--select__year custom-select" id="inputGroupSelect01">
-                    <option selected disabled={defaultBreedDisabled ? true : null}>Selecione uma raça</option>
+                  <Select
+                    value={breedSelected ? breedSelected : 'Selecione uma raça'}
+                    handleSelect={this.handleSelectBreed}
+                    defaultSelectIsAble={defaultBreedDisabled ? true : null}
+                    defaultSelectName="Selecione uma raça"
+                  >
                     {newBreeds && newBreeds.map(
-                      breed => (<option value={breed}>{breed}</option>),
+                      data => (<option key={data} value={data}>{data}</option>),
                     )}
-                  </select>
+                  </Select>
                 </div>
-                <div className="col-md-6 ">
-                  <select value={this.state.colorSelected} onChange={this.handleSelectColor} className="formFilter--select formFilter--select__year custom-select" id="inputGroupSelect01">
-                    <option defaultValue disabled={defaultColorDisabled ? true : null}>Selecione a cor</option>
+                <div className="col-md-6 mt-3 mt-sm-0">
+                  <Select
+                    value={this.state.colorSelected}
+                    handleSelect={this.handleSelectColor}
+                    defaultSelectIsAble={defaultColorDisabled ? true : null}
+                    defaultSelectName="Selecione uma cor"
+                  >
                     {colors.map(
                       (color) => (<option key={color.color} value={color.color}>{color.label}</option>),
                     )}
-                  </select>
+                  </Select>
                 </div>
               </div>
 
               <div className="row">
                 <div className="col-md-6">
-                  <input value={this.state.nameSelected} className="formFilter--input" onChange={this.handleName} id="" placeholder='Digite o nome' />
+                  <input value={this.state.nameSelected} className="form-control" onChange={this.handleName} id="" placeholder='Digite um nome' />
                 </div>
-                <div className="col-md-6">
-                  <select value={this.state.fontSelected} onChange={this.handleSelectFont} className="formFilter--select formFilter--select__year custom-select">
-                    <option defaultValue disabled={defaultFontDisabled ? true : null}>Selecione a fonte</option>
+                <div className="col-md-6 mt-3 mt-sm-0">
+                  <Select
+                    value={this.state.fontSelected}
+                    handleSelect={this.handleSelectFont}
+                    defaultSelectIsAble={defaultFontDisabled ? true : null}
+                    defaultSelectName="Selecione uma fonte"
+                  >
                     {fonts.map(
                       (font) => (<option key={font.font} value={font.font}>{font.label}</option>),
                     )}
-                  </select>
+                  </Select>
+
+                  <div className="formDog--seeOffers">
+                    <button onClick={() => this.saveDogInfo()} type="button" className="formDog--sendButton">Salvar</button>
+                  </div>
+
                 </div>
               </div>
             </div>
-            <div className="container">
-              <div className="row pt-3">
-                <div className="formFilter--advancedSearch d-flex align-items-center">
-                  <a href="/" className="formFilter--advancedSearchLink pl-3">
-                    <IoIosArrowForward />
-                    Busca avançada
-                  </a>
-                </div>
-                <div className="formFilter--cleanFilters d-flex align-items-center">
-                  <a href="/" className="formFilter--cleanFiltersLink pl-3">Limpar filtros</a>
-                </div>
-                <div className="formFilter--seeOffers">
-                  <button onClick={() => this.saveDogInfo()} type="button" className="formFilter--btnSeeOffers">Salvar</button>
-                </div>
-              </div>
-            </div>
+
           </form>
         </div>
-
+        <NotificationContainer />
       </div>
     );
   }

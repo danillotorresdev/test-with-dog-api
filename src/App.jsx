@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import store from './redux';
 import Home from './pages/Home';
+import 'react-notifications/lib/notifications.css';
 
 function App() {
   return (

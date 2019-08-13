@@ -24,5 +24,6 @@ module.exports = {
     "jsx-a11y/label-has-associated-control": "off",
     "jsx-a11y/label-has-for": "off",
     "import/prefer-default-export": "off",
+    "react/prop-types": "off",
   },
 };
