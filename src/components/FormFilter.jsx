@@ -61,17 +61,44 @@ class FormFilter extends Component {
       fontSelected: '',
       nameSelected: '',
       colorSelected: '',
+      breedImg: '',
     };
 
     this.handleSelectBreed = this.handleSelectBreed.bind(this);
     this.handleName = this.handleName.bind(this);
     this.handleSelectColor = this.handleSelectColor.bind(this);
     this.handleSelectFont = this.handleSelectFont.bind(this);
+    this.saveDogInfo = this.saveDogInfo.bind(this);
   }
 
   componentDidMount() {
     const { loadBreeds, loadModels, loadImageBreed } = this.props;
     loadBreeds();
+
+    const font = localStorage.getItem('fontSelected');
+    const color = localStorage.getItem('colorSelected');
+    const nameSelected = localStorage.getItem('nameSelected');
+    const breedImg = localStorage.getItem('breedImg');
+    const breedSelected = localStorage.getItem('breedSelected');
+
+    if (font) {
+      this.setState({ fontSelected: font });
+    }
+    if (color) {
+      this.setState({ colorSelected: color });
+    }
+
+    if (nameSelected) {
+      this.setState({ nameSelected });
+    }
+    if (breedImg) {
+      this.setState({ breedImg });
+    }
+    if (breedSelected) {
+      this.setState({
+        breedSelected
+      })
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -129,13 +156,35 @@ class FormFilter extends Component {
     });
   }
 
+  saveDogInfo() {
+    const { colorSelected, fontSelected, nameSelected, breedImg, breedSelected } = this.state;
+    const { breeds, imageBreed } = this.props;
+    localStorage.setItem('fontSelected', fontSelected);
+    localStorage.setItem('colorSelected', colorSelected);
+    localStorage.setItem('nameSelected', nameSelected);
+    localStorage.setItem('breedSelected', breedSelected);
+    localStorage.setItem('breedImg', imageBreed.imageBreed.message);
+  }
 
   render() {
     const { breeds, imageBreed } = this.props;
-    const { colors, fonts, nameSelected, defaultColorDisabled, defaultBreedDisabled, defaultFontDisabled } = this.state
+    const { colors, breedSelected, fonts, nameSelected, defaultColorDisabled, defaultBreedDisabled, defaultFontDisabled, breedImg } = this.state
 
     const breedsData = breeds.data.message;
     const newBreeds = this.json2array(breedsData);
+
+
+    let dogImage;
+    if (breedImg) {
+      dogImage = breedImg;
+    } else {
+      dogImage = imageBreed.imageBreed.message
+    }
+    console.log(imageBreed.imageBreed.message)
+    if (imageBreed.imageBreed.message !== undefined) {
+      dogImage = imageBreed.imageBreed.message;
+    }
+
 
     return (
       <div className="container pt-4">
@@ -146,7 +195,7 @@ class FormFilter extends Component {
             </div>
             <div className="col-md-6">
               <div className="formFilter--imageWithText form-group d-flex flex-wrap flex-column ">
-                <img class="img-fluid" src={imageBreed.imageBreed.message} alt="" />
+                <img class="img-fluid" src={dogImage} alt="" />
                 <span className={`formFilter--dogName ${this.state.colorSelected} formFilter--font__${this.state.fontSelected}`}>{nameSelected}</span>
               </div>
             </div>
@@ -154,7 +203,7 @@ class FormFilter extends Component {
             <div className="col-md-6">
               <div className="row form-group">
                 <div className="col-md-6">
-                  <select defaultValue="Selecione uma raça" onChange={this.handleSelectBreed} className="formFilter--select formFilter--select__year custom-select" id="inputGroupSelect01">
+                  <select value={breedSelected ? breedSelected : 'Selecione uma raça'} onChange={this.handleSelectBreed} className="formFilter--select formFilter--select__year custom-select" id="inputGroupSelect01">
                     <option selected disabled={defaultBreedDisabled ? true : null}>Selecione uma raça</option>
                     {newBreeds && newBreeds.map(
                       breed => (<option value={breed}>{breed}</option>),
@@ -162,7 +211,7 @@ class FormFilter extends Component {
                   </select>
                 </div>
                 <div className="col-md-6 ">
-                  <select onChange={this.handleSelectColor} className="formFilter--select formFilter--select__year custom-select" id="inputGroupSelect01">
+                  <select value={this.state.colorSelected} onChange={this.handleSelectColor} className="formFilter--select formFilter--select__year custom-select" id="inputGroupSelect01">
                     <option defaultValue disabled={defaultColorDisabled ? true : null}>Selecione a cor</option>
                     {colors.map(
                       (color) => (<option key={color.color} value={color.color}>{color.label}</option>),
@@ -173,10 +222,10 @@ class FormFilter extends Component {
 
               <div className="row">
                 <div className="col-md-6">
-                  <input className="formFilter--input" onChange={this.handleName} id="" placeholder='Digite o nome' />
+                  <input value={this.state.nameSelected} className="formFilter--input" onChange={this.handleName} id="" placeholder='Digite o nome' />
                 </div>
                 <div className="col-md-6">
-                  <select onChange={this.handleSelectFont} className="formFilter--select formFilter--select__year custom-select">
+                  <select value={this.state.fontSelected} onChange={this.handleSelectFont} className="formFilter--select formFilter--select__year custom-select">
                     <option defaultValue disabled={defaultFontDisabled ? true : null}>Selecione a fonte</option>
                     {fonts.map(
                       (font) => (<option key={font.font} value={font.font}>{font.label}</option>),
@@ -197,7 +246,7 @@ class FormFilter extends Component {
                   <a href="/" className="formFilter--cleanFiltersLink pl-3">Limpar filtros</a>
                 </div>
                 <div className="formFilter--seeOffers">
-                  <button type="button" className="formFilter--btnSeeOffers">Ver Oferta</button>
+                  <button onClick={() => this.saveDogInfo()} type="button" className="formFilter--btnSeeOffers">Salvar</button>
                 </div>
               </div>
             </div>
