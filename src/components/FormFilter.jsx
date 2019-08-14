@@ -176,6 +176,7 @@ class FormFilter extends Component {
     const dateAndHourConc = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
 
     const { colorSelected, fontSelected, nameSelected, breedSelected } = this.state;
+    if(colorSelected !== "" && fontSelected !== "" && nameSelected !== "" && breedSelected !== ""){
     const { imageBreed } = this.props;
     localStorage.setItem('fontSelected', fontSelected);
     localStorage.setItem('colorSelected', colorSelected);
@@ -183,11 +184,15 @@ class FormFilter extends Component {
     localStorage.setItem('breedSelected', breedSelected);
     localStorage.setItem('breedImg', imageBreed.imageBreed.message);
     localStorage.setItem('dateAndHour', dateAndHourConc);
+    NotificationManager.success('Salvo com sucesso');
+    } else{
+      NotificationManager.error('Você precisa preencher todos os campos para salvar');
+    }
 
     this.setState({
       dateAndHour: dateAndHourConc,
     });
-    NotificationManager.success('Salvo com sucesso');
+    
   }
 
   render() {
