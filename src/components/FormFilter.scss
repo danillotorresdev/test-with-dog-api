@@ -23,6 +23,12 @@
     position: relative;
     text-align: center;
   }
+  &--img{
+    height: 500px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 
   &--dogName {
     position: absolute;

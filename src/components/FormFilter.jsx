@@ -227,7 +227,7 @@ class FormFilter extends Component {
           <form className="formDog col-md-12 row">
             <div className="col-md-6">
               <div className="formDog--imageWithText form-group d-flex flex-wrap flex-column ">
-                <img className="img-fluid" src={dogImage} alt="" />
+                <img className="formDog--img" src={dogImage} alt="" />
                 <span className={`formDog--dogName ${this.state.colorSelected} formDog--font__${this.state.fontSelected}`}>{nameSelected}</span>
               </div>
             </div>
